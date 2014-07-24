@@ -30,5 +30,5 @@ It will add 2 lines of code to the index file.<br/>
 
 
 <h2>Step 3</h2>
-Copy the extensions directory to the root of the Couchbase webserver directory
+Copy the extensions directory to the root of the Couchbase webserver directory<br/>
 ```cp -r /Users/joelsaltzman/Downloads/couchbase\ user\ management/extensions /Applications/Couchbase\ Server.app/Contents/Resources/couchbase-core/lib/ns_server/erlang/lib/ns_server/priv/public/```<br/>
