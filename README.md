@@ -15,7 +15,7 @@ We will be working in the Couchbase webserver root directory. On a Mac, it is he
 <b>/Applications/Couchbase\ Server.app/Contents/Resources/couchbase-core/lib/ns_server/erlang/lib/ns_server/priv/public/</b>
 
 <h2>Step 1</h2>
-cross_domain_handler.php needs to go on the computer with the sync_gateway. Since I'm working with everything on my Mac I just copied it to my apache directory.<br/>
+cross_domain_handler.php needs to go on the computer with the sync_gateway. Since I'm working with everything on my Mac I just copied it to my webserver's root directory.<br/>
 ```cp /Users/joelsaltzman/Downloads/couchbase\ user\ management/cross_domain_handler.php /Library/Server/Web/Data/Sites/Default```<br/>
 
 <b>If your path is different, make sure to update the CROSS_DOMAIN_HANDLER_URL variable at the top of the user_management.js directory</b>
@@ -31,4 +31,4 @@ It will add 2 lines of code to the index file.<br/>
 
 <h2>Step 3</h2>
 Copy the extensions directory to the root of the Couchbase webserver directory
-```cp -r extensions /Applications/Couchbase\ Server.app/Contents/Resources/couchbase-core/lib/ns_server/erlang/lib/ns_server/priv/public/```<br/>
+```cp -r /Users/joelsaltzman/Downloads/couchbase\ user\ management/extensions /Applications/Couchbase\ Server.app/Contents/Resources/couchbase-core/lib/ns_server/erlang/lib/ns_server/priv/public/```<br/>
