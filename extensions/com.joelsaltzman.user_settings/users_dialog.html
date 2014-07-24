@@ -1,0 +1,115 @@
+
+<div class="dialog user_settings really" id="user_settings_dialog" style="width: 800px; ">
+	<h1>
+		<span class="when-editing">Create / Edit Users</span>
+	</h1>
+	<div style="float:left;  width: 40%; border-right: 1px solid #CCCFD2; box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box;">
+		<div>
+			<div style="overflow-y: auto; overflow-x: hidden; height: 246px;" id="users">
+				<table style="width:100%;" id="users_table">
+					<tbody id="usersTableBody">
+					</tbody>
+				</table>
+			</div>
+			<div class="save_cancel" style="margin-top: 0px;">
+				<form id="new_user_form"  onsubmit="event.preventDefault(); return usersController.createNewUser();">
+					<input id="new_user_input" autocomplete="off" placeholder="New User" style="float:left; margin: 4px 12px 0px 0px;" ></input>
+					<button type="submit" style="float:left; width:61px; height:21px; margin-top: 6px; background:url(../images/add_btn.png) 0 0 no-repeat;" alt="Submit" height="21">
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div style=" width:60%; float:right;">
+		<div style="">
+			<form id="user_form">
+				<fieldset class="user_settings">
+					<table style="height: 195px; width: 100%; margin: 8px 0px 43px 0px;">
+						<tr>
+							<td>
+								<label class="for-name" autocomplete="off"><span>Name:</span></label>
+							</td>
+							<td>
+								<input name="user_name" value="" style="width:100%;">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label class="for-email" autocomplete="off"><span>Email:</span></label>
+							</td>
+							<td>
+								<input name="user_email" value="" style="width:100%;">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label class="for-password" autocomplete="off"><span>Password:</span></label>
+							</td>
+							<td>
+								<input name="user_password" value="" placeholder="*******" style="width:100%;">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label class="for-admin_channels"><span>Admin Channels:</span></label>
+							</td>
+							<td>
+								<input name="user_admin_channels" value="" placeholder="ex: profiles,other" style="width:100%;">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label class="for-admin_roles"><span>Admin Roles:</span></label>
+							</td>
+							<td>
+								<input name="user_admin_roles" value="" placeholder="ex: role1,role2" style="width:100%;">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label class="for-disabled"><span>Disabled:</span></label>
+							</td>
+							<td>
+								<input type="checkbox" name="user_disabled" defaultchecked="false">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label class="for-all_channels"><span>All Channels:</span></label>
+							</td>
+							<td name="user_all_channels" style="font-size: 13px;">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label class="for-roles"><span>Roles:</span></label>
+							</td>
+							<td name="user_roles" style="font-size: 13px;">
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+				<div class="save_cancel" style="">
+					<button class="delete_button" style="float: left;">Delete</button>
+					<button class="save_button float_right" type="submit">Save</button>
+					<a class="close">Cancel</a>
+				</div>
+			</form>
+			
+		</div>
+	</div>
+</div>
+
+<div class="dialog" id="user_remove_dialog" title="Removing">
+  <form>
+    <div class="clearfix">
+      <div class="err">
+        <p>Are you sure you want to delete this user?</p>
+      </div>
+    </div>
+    <div class="save_cancel clearfix">
+      <button onClick="usersController.deleteSelectedUser();" type="button" class="delete_button float_right">Delete</button>
+      <a class="close">Cancel</a>
+    </div>
+  </form>
+</div>

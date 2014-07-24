@@ -1,0 +1,1 @@
+This is my rough draft request for adding user management to the couchbase server web app.
