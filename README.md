@@ -1,9 +1,9 @@
 This is a working sample of my request to add user management to the couchbase server web app.
 
-It adds a button to the Bucket
+It adds a button to the Bucket<br/>
 Example: ![alt tag](https://raw.github.com/saltzmanjoelh/couchbase-user-management/master/readme_images/users_button.png)
 
-When pressed it will present the User Management for the Bucket
+When pressed it will present the User Management for the Bucket<br/>
 Example: ![alt tag](https://raw.github.com/saltzmanjoelh/couchbase-user-management/master/readme_images/user_management.png)
 
 
