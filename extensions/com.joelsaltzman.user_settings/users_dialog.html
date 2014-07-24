@@ -90,8 +90,8 @@
 					</table>
 				</fieldset>
 				<div class="save_cancel" style="">
-					<button class="delete_button" style="float: left;">Delete</button>
-					<button class="save_button float_right" type="submit">Save</button>
+					<button class="save_button float_right" type="submit" onclick="event.preventDefault(); return false;">Save</button>
+					<button class="delete_button" style="float: left;" onclick="event.preventDefault(); return false;">Delete</button>
 					<a class="close">Cancel</a>
 				</div>
 			</form>

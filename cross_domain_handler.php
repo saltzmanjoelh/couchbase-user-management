@@ -2,7 +2,6 @@
 	// error_reporting(E_ALL);
 	// ini_set('display_errors','On');
 	
-	
 	$CB_SERVER_URL = "http://127.0.0.1:8091";
 	$SYNC_GATEWAY_ADMIN_URL = "http://127.0.0.1:4985";
 	
@@ -11,6 +10,7 @@
 	header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 	header('Access-Control-Max-Age: 1000');
 	header('Access-Control-Allow-Headers: pragma, accept, cache-control, origin, invalid-auth-response, content-type');
+	
 	
 	if($_SERVER['REQUEST_METHOD'] == "GET"){
 		//parse the callback
@@ -40,7 +40,7 @@
 	}
 	else{
 
-		//php doesn't handle json in the POST
+		//php doesn't handle json in the request body it's raw text
 		$JSONObj = json_decode(file_get_contents("php://input"), true) ?: [];
 		if(!isset($JSONObj['sync_gateway_query'])){
 			echo json_encode(array("error"=>"sync_gateway_query key must be provided.".print_r($JSONObj, true)));
@@ -78,7 +78,7 @@
 		$data = curl_exec($ch);
 		if($data === false){
 			$error = "Curl Error Number ". curl_errno($ch). ": ". curl_error($ch);
-			echo json_encode(array("error"=>$error);
+			echo json_encode(array("error"=>$error));
 		}
 		else{
 			echo $data;

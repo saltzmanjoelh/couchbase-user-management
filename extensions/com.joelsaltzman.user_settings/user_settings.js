@@ -88,8 +88,8 @@ var UserSettingsDetailsDialog = mkClass({
 
     self.startForm();
 	$("#user_form .save_button").bind('click', function (e) {
-      e.preventDefault();
-	  usersController.saveUserSettings();
+	      e.preventDefault(); 
+		  usersController.saveUserSettings();
     });
 	$("#user_form .delete_button").bind('click', function (e) {
       e.preventDefault();
@@ -220,8 +220,8 @@ var UserSettingsDetailsDialog = mkClass({
   }
 });
 function jsonCallback(item){
-	console.log("jsonCallback ");
-	console.log(item);
+	// console.log("jsonCallback ");
+	// console.log(item);
 }
 
 /* --- ADMIN INFO --- */
@@ -449,7 +449,7 @@ var UsersController = {
 		var jsonStr = JSON.stringify(jsonObject);
 		// console.log("OUTGOING: "+jsonStr);
 		$.ajax({
-		    type: 'POST',//PUT doesn't seem to work crossDomain (I don't remember why)
+		    type: 'PUT',
 		    url: 'http://127.0.0.1/cross_domain_handler.php',
 		    crossDomain: true,
 		    data: jsonStr,
@@ -583,7 +583,7 @@ var UsersController = {
 		var jsonStr = JSON.stringify(jsonObject);
 		// console.log("OUTGOING: "+jsonStr);
 		$.ajax({
-		    type: 'POST',//PUT doesn't seem to work crossDomain (I don't remember why)
+		    type: 'POST',
 		    url: 'http://127.0.0.1/cross_domain_handler.php',
 		    crossDomain: true,
 		    data: jsonStr,
@@ -621,7 +621,7 @@ var UsersController = {
 		var jsonObject = {delete_user:true, sync_gateway_query: "/"+this.bucketName+"/_user/"+this.selectedUser["name"]};
 		var jsonStr = JSON.stringify(jsonObject);
 		$.ajax({
-		    type: 'POST',
+		    type: 'DELETE',
 		    url: 'http://127.0.0.1/cross_domain_handler.php',
 		    crossDomain: true,
 		    data: jsonStr,
