@@ -1,4 +1,6 @@
 
+var CROSS_DOMAIN_HANDLER_URL = "http://127.0.0.1/cross_domain_handler.php";
+
 function query (usersController)
 {
 	var xmlhttp = usersController.newRequest();
@@ -40,7 +42,7 @@ function jsonArray(rawString)
 }
 
 /* --- Dialog --- */
-var UserSettingsDetailsDialog = mkClass({
+var UserManagementDetailsDialog = mkClass({
   initialize: function (initValues, isNew, options) {
     var self = this;
 
@@ -53,7 +55,7 @@ var UserSettingsDetailsDialog = mkClass({
 
     options = options || {};
 
-    this.dialogID = options.id || 'user_settings_dialog';
+    this.dialogID = options.id || 'user_management_dialog';
 
     this.refreshBuckets = options.refreshBuckets || $m(BucketsSection, 'refreshBuckets');
 
@@ -89,14 +91,14 @@ var UserSettingsDetailsDialog = mkClass({
     self.startForm();
 	$("#user_form .save_button").bind('click', function (e) {
 	      e.preventDefault(); 
-		  usersController.saveUserSettings();
+		  usersController.saveUser();
     });
 	$("#user_form .delete_button").bind('click', function (e) {
       e.preventDefault();
       showDialog('user_remove_dialog', {
         closeOnEscape: false,
         onHide: function(jq) {
-          $('#user_settings_dialog').dialog('option', 'closeOnEscape', true);
+          $('#user_management_dialog').dialog('option', 'closeOnEscape', true);
         }
       });
     });
@@ -254,7 +256,7 @@ var UsersController = {
 		var usersController = this;
 		var query = "/"+usersController.bucketName+"/_user/";
         $.ajax({
-          url: "http://127.0.0.1/cross_domain_handler.php?sync_gateway_query="+encodeURIComponent(query),
+          url: CROSS_DOMAIN_HANDLER_URL+"?sync_gateway_query="+encodeURIComponent(query),
           dataType: 'jsonp',
 		  contentType: "application/json",
   		  jsonpCallback: 'jsonCallback',
@@ -366,7 +368,7 @@ var UsersController = {
 		var usersController = this;
 		var query = "/"+usersController.bucketName+"/_user/"+userName;
         $.ajax({
-          url: "http://127.0.0.1/cross_domain_handler.php?sync_gateway_query="+encodeURIComponent(query),
+          url: CROSS_DOMAIN_HANDLER_URL+"?sync_gateway_query="+encodeURIComponent(query),
           dataType: 'jsonp',
 		  contentType: "application/json",
   		  jsonpCallback: 'jsonCallback',
@@ -421,7 +423,7 @@ var UsersController = {
 			}
 		}
 	},
-	saveUserSettings: function(){
+	saveUser: function(){
 		if(this.selectedUser == null){
 			return;
 		}
@@ -450,7 +452,7 @@ var UsersController = {
 		// console.log("OUTGOING: "+jsonStr);
 		$.ajax({
 		    type: 'PUT',
-		    url: 'http://127.0.0.1/cross_domain_handler.php',
+		    url: CROSS_DOMAIN_HANDLER_URL,
 		    crossDomain: true,
 		    data: jsonStr,
 		    dataType: 'json',
@@ -467,7 +469,7 @@ var UsersController = {
 			}
 		});
 	},
-	showUserSettings: function (uri){
+	showUserManagement: function (uri){
 		//parse the url
 		this.URL = document.URL;
 		this.URL = this.URL.substring(0, this.URL.indexOf("/index.html")); 
@@ -548,7 +550,7 @@ var UsersController = {
 
 	          modalSpinner.close();
 
-	          var dialog = new UserSettingsDetailsDialog(initValues, false);
+	          var dialog = new UserManagementDetailsDialog(initValues, false);
 
 	          BucketsSection.currentlyShownBucket = bucketDetails;
 	          dialog.startDialog();
@@ -584,7 +586,7 @@ var UsersController = {
 		// console.log("OUTGOING: "+jsonStr);
 		$.ajax({
 		    type: 'POST',
-		    url: 'http://127.0.0.1/cross_domain_handler.php',
+		    url: CROSS_DOMAIN_HANDLER_URL,
 		    crossDomain: true,
 		    data: jsonStr,
 		    dataType: 'json',
@@ -622,7 +624,7 @@ var UsersController = {
 		var jsonStr = JSON.stringify(jsonObject);
 		$.ajax({
 		    type: 'DELETE',
-		    url: 'http://127.0.0.1/cross_domain_handler.php',
+		    url: CROSS_DOMAIN_HANDLER_URL,
 		    crossDomain: true,
 		    data: jsonStr,
 		    dataType: 'json',
@@ -647,11 +649,11 @@ var UsersController = {
 //create the UsersController
 var usersController = UsersController;
 //configure for the Users button
-configureActionHashParam("userSettings", $m(UsersController, 'showUserSettings'));
+configureActionHashParam("userManagement", $m(UsersController, 'showUserManagement'));
 
 //add the dialog
 var div = document.createElement("div");
 div.id = "users_dialog";
-$( div ).load( "extensions/com.joelsaltzman.user_settings/users_dialog.html" );
+$( div ).load( "extensions/com.joelsaltzman.user_management/users_dialog.html" );
 var body = document.getElementsByTagName('body')[0];
 body.appendChild(div);

@@ -1,0 +1,17 @@
+--- /Users/joelsaltzman/Downloads/Couchbase Server.app/Contents/Resources/couchbase-core/lib/ns_server/erlang/lib/ns_server/priv/public/index.html	2013-12-04 16:45:08.000000000 -0800
++++ /Applications/Couchbase Server.app/Contents/Resources/couchbase-core/lib/ns_server/erlang/lib/ns_server/priv/public/index.html	2014-07-23 21:41:43.000000000 -0700
+@@ -621,6 +621,7 @@
+                   {% } else if (!noCompaction) { %}
+                     <button class="inner_btn cancel_compact_btn {%= disableCancel ? 'dynamic_disabled' : ''%}" data-uri="{%= h(thisBucketCompactionTask.cancelURI) %}"><span>Cancel</span></button>
+                   {% } %}
++					<a class="inner_btn" href="#userManagement={%= h(encodeURIComponent(uri)) %}">Users</a>
+                 </div>
+               </div>
+               <div class="side side_1"></div>
+@@ -2925,5 +2926,6 @@
+ <script src="js/all-images.js"></script>
+ <script src="js/global_progress.js"></script>
+ <script src="js/app.js"></script>
++<script src="extensions/com.joelsaltzman.user_management/user_management.js"></script>
+ </body>
+ </html>

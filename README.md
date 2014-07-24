@@ -1,16 +1,15 @@
-This is my rough draft request for adding user management to the couchbase server web app.
+This is a working sample of my request to add user management to the couchbase server web app.
 
-I need to make a patch file. In the meantime, here is what to do to get started:
-
-1) In the couchbase index.html (/Applications/Couchbase Server.app/Contents/Resources/couchbase-core/lib/ns_server/erlang/lib/ns_server/priv/public/index.html): 
-after line 2927 ```<script src="js/app.js"></script>``` add
-```<script src="extensions/com.joelsaltzman.user_settings/user_settings.js"></script>```
-
-Example: ![alt tag](https://raw.github.com/saltzmanjoelh/couchbase-user-management/master/readme_images/user_settings_script.png)
-
-
-2) after line 623 right befor the closing div ```<button class="inner_btn cancel_compact_btn {%= disableCancel ? 'dynamic_disabled' : ''%}" data-uri="{%= h(thisBucketCompactionTask.cancelURI) %}"><span>Cancel</span></button>{% } %}``` add
-
-```<a class="inner_btn" href="#userSettings={%= h(encodeURIComponent(uri)) %}">Users</a>```
-
+It adds a button to the Bucket
 Example: ![alt tag](https://raw.github.com/saltzmanjoelh/couchbase-user-management/master/readme_images/users_button.png)
+
+When pressed it will present the User Management for the Bucket
+Example: ![alt tag](https://raw.github.com/saltzmanjoelh/couchbase-user-management/master/readme_images/user_management.png)
+
+
+Apply the patch to the Couchbase webserver's index file.
+ie: patch <b>/Applications/Couchbase\ Server.app/Contents/Resources/couchbase-core/lib/ns_server/erlang/lib/ns_server/priv/public/index.html</b> < /Users/joelsaltzman/Downloads/couchbase\ user\ management/index.html.patch 
+
+It will add 2 lines of code to the index file.
+Example: ![alt tag](https://raw.github.com/saltzmanjoelh/couchbase-user-management/master/readme_images/users_button_code.png)
+Example: ![alt tag](https://raw.github.com/saltzmanjoelh/couchbase-user-management/master/readme_images/user_management_code.png)
