@@ -6,7 +6,7 @@ It adds a button to the Bucket<br/>
 When pressed it will present the User Management for the Bucket<br/>
 ![alt tag](https://raw.github.com/saltzmanjoelh/couchbase-user-management/master/readme_images/user_management.png)
 
-Unless I missed something, the sync_gateway doesn't allow cross domain requests by default. I would be interested to know if it allows CORS via the config file though. I created the cross_domain_handler.php file to handle ajax requests from the Couchbase webserver, parses a little info and sends it to the sync_gateway.
+Unless I missed something, the sync_gateway doesn't allow cross domain requests by default. I would be interested to know if it allows CORS via the config file though. I created the cross_domain_handler.php file to handle ajax requests from the Couchbase webserver, parse a little info and send it to the sync_gateway.
 
 
 <h1>Instructions</h1>

@@ -46,31 +46,11 @@ var UserManagementDetailsDialog = mkClass({
   initialize: function (initValues, isNew, options) {
     var self = this;
 
-    this.isNew = isNew;
-    this.initValues = initValues;
+    this.dialogID = 'user_management_dialog';
 
-    initValues.toBeAllocatedForOtherBuckets = initValues.toBeAllocatedForOtherBuckets || 0;
-
-    initValues.ramQuotaMB = BytestoMB(initValues.quota.rawRAM - initValues.toBeAllocatedForOtherBuckets);
-
-    options = options || {};
-
-    this.dialogID = options.id || 'user_management_dialog';
-
-    this.refreshBuckets = options.refreshBuckets || $m(BucketsSection, 'refreshBuckets');
-
-    this.formValidationCallback = options.formValidationCallback || function () {};
-
-    this.getFormValues = options.getFormValues || AutoCompactionSection.serializeCompactionForm;
-
-    this.onSuccess = options.onSuccess || function () {
+    this.onSuccess = function () {
       hideDialog(this.dialogID);
     };
-
-    this.doCreateBucket = options.doCreateBucket || function (uri, form, callback) {
-       var data = self.getFormValues(form);
-       jsonPostWithErrors(uri, data, callback);
-    }
 
     var dialog = this.dialog = $('#' + this.dialogID);
 
@@ -119,54 +99,6 @@ var UserManagementDetailsDialog = mkClass({
     });
   },
 
-  renderGauge: function (jq, total, thisBucket, otherBuckets) {
-    var thisValue = thisBucket,
-        formattedBucket = ViewHelpers.formatQuantity(thisBucket, null, null, ' ');
-
-    if (_.isString(thisValue)) {
-      formattedBucket = thisValue;
-      thisValue = 0;
-    }
-
-    var options = {
-      topAttrs: {'class': 'size-gauge for-ram'},
-      topRight: ['Cluster quota', ViewHelpers.formatMemSize(total)],
-      items: [
-        {name: 'Other Buckets',
-         value: otherBuckets,
-         attrs: {style: 'background-color:#00BCE9'},
-         tdAttrs: {style: 'color:#1878a2;'}},
-        {name: 'This Bucket',
-         value: thisValue,
-         attrs: {style: 'background-color:#7EDB49'},
-         tdAttrs: {style: 'color:#409f05;'}},
-        {name: 'Free',
-         value: total - otherBuckets - thisValue,
-         attrs: {style: 'background-color:#E1E2E3'},
-         tdAttrs: {style: 'color:#444245;'}}
-      ],
-      markers: []
-    };
-
-    if (options.items[2].value < 0) {
-      options.items[1].value = total - otherBuckets;
-      options.items[2] = {
-        name: 'Overcommitted',
-        value: otherBuckets + thisValue - total,
-        attrs: {style: 'background-color: #F40015;'},
-        tdAttrs: {style: 'color:#e43a1b;'}
-      };
-      options.markers.push({value: total,
-                            attrs: {style: 'background-color:#444245;'}});
-      options.markers.push({value: otherBuckets + thisValue,
-                            attrs: {style: 'background-color:red;'}});
-      options.topLeft = ['Total Allocated', ViewHelpers.formatMemSize(otherBuckets + thisValue)];
-      options.topLeftAttrs = {style: 'color:#e43a1b;'};
-    }
-
-    jq.replaceWith(memorySizesGaugeHTML(options));
-  },
-
   renderError: function (field, error) {
     var fieldClass = field.replace(/\[|\]/g, '-');
     this.dialog.find('.error-container.err-' + fieldClass).text(error || '')[error ? 'addClass' : 'removeClass']('active');
@@ -176,55 +108,8 @@ var UserManagementDetailsDialog = mkClass({
   getFormData: function () {
     var form = this.dialog.find('form');
     return serializeForm(form, {});
-  },
-
-  // this updates our gauges and errors
-  // we don't use it to set input values, 'cause for the later we need to do it once
-  onValidationResult: function (result) {
-    if (!result)
-      return;
-
-    var self = this,
-        summaries = result.summaries || {},
-        ramSummary = summaries.ramSummary,
-        ramGauge = self.dialog.find(".size-gauge.for-ram"),
-        memcachedSummaryJQ = self.dialog.find('.memcached-summary'),
-        memcachedSummaryVisible = ramSummary && ramSummary.perNodeMegs,
-        knownFields = ('name ramQuotaMB replicaNumber proxyPort databaseFragmentationThreshold[percentage] viewFragmentationThreshold[percentage] databaseFragmentationThreshold[size] viewFragmentationThreshold[size] allowedTimePeriod threadsNumber purgeInterval saslPassword').split(' '),
-        errors = result.errors || {};
-
-    _.each(('to from').split(' '), function (p1) {
-      _.each(('Hour Minute').split(' '), function (p2) {
-        knownFields.push('allowedTimePeriod[' + p1 + p2 + ']');
-      });
-    });
-
-    if (ramSummary) {
-      self.renderGauge(ramGauge,
-                       ramSummary.total,
-                       ramSummary.thisAlloc - self.initValues.toBeAllocatedForOtherBuckets,
-                       ramSummary.otherBuckets + self.initValues.toBeAllocatedForOtherBuckets);
-    }
-    ramGauge.css('visibility', ramSummary ? 'visible' : 'hidden');
-
-    if (memcachedSummaryVisible) {
-      memcachedSummaryJQ.text('Total bucket size = '
-                              + BytestoMB(ramSummary.thisAlloc - self.initValues.toBeAllocatedForOtherBuckets * ramSummary.nodesCount)
-                              + ' MB ('
-                              + (ramSummary.perNodeMegs - BytestoMB(self.initValues.toBeAllocatedForOtherBuckets)).toString()
-                              + ' MB x ' + ViewHelpers.count(ramSummary.nodesCount, 'node') +')');
-    }
-    memcachedSummaryJQ.css('display', memcachedSummaryVisible ? 'block' : 'none');
-
-    _.each(knownFields, function (name) {
-      self.renderError(name, errors[name]);
-    });
   }
 });
-function jsonCallback(item){
-	// console.log("jsonCallback ");
-	// console.log(item);
-}
 
 /* --- ADMIN INFO --- */
 var UsersController = {
@@ -257,9 +142,8 @@ var UsersController = {
 		var query = "/"+usersController.bucketName+"/_user/";
         $.ajax({
           url: CROSS_DOMAIN_HANDLER_URL+"?sync_gateway_query="+encodeURIComponent(query),
-          dataType: 'jsonp',
+          dataType: 'json',
 		  contentType: "application/json",
-  		  jsonpCallback: 'jsonCallback',
           success: function (userNames) { 
 			  if(userNames == undefined){
 				  return;
@@ -369,9 +253,8 @@ var UsersController = {
 		var query = "/"+usersController.bucketName+"/_user/"+userName;
         $.ajax({
           url: CROSS_DOMAIN_HANDLER_URL+"?sync_gateway_query="+encodeURIComponent(query),
-          dataType: 'jsonp',
+          dataType: 'json',
 		  contentType: "application/json",
-  		  jsonpCallback: 'jsonCallback',
           success: function (user) { 
 			usersController.users[userName] = user;
 			usersController.selectUser(user);
@@ -462,6 +345,9 @@ var UsersController = {
 				if(jqXHR.responseText == undefined || jqXHR.responseText == ""){
 					//empty json is ok
 					usersController.fetchUser(usersController.selectedUser["name"]);
+			        genericDialog({buttons: {ok: true},
+			                       header: "Succes",
+			                       text: "User Updated"});
 				}
 				else{
 					usersController.handleError(jqXHR);
@@ -507,56 +393,11 @@ var UsersController = {
 	        return instance;
 	      })();
 
-	      BucketsSection.settingsWidget.detailsMap.getValue(function (mapValue) {
-	        var fullDetailsCell = mapValue.get(bucketDetails);
-	        if (!fullDetailsCell) {
-	          return;
-	        }
-
-	        var autoCompactionSettingsCell = Cell.compute(function (v) {
-	          return AutoCompactionSection.getSettingsFuture();
-	        });
-
-	        var fullerDetailsCell = Cell.compute(function (v) {
-	          var rv = _.extend({}, bucketDetails, v.need(fullDetailsCell));
-	          var autoCompactionSettings = rv.autoCompactionSettings;
-	          rv.autoCompactionDefined = ((autoCompactionSettings || false) !== false);
-	          if (!autoCompactionSettings) {
-	            var globalSettings = v.need(autoCompactionSettingsCell);
-	            _.extend(rv, globalSettings);
-	          }
-	          return rv;
-	        });
-
-	        fullDetailsCell.setValue(undefined);
-	        BucketsSection.settingsWidget.openElement(bucketDetails.name);
-	        fullerDetailsCell.changedSlot.subscribeOnce(withDetails);
-	        fullDetailsCell.invalidate();
-
-	        return;
-
-	        function withDetails() {
-	          var initValues = _.clone(fullerDetailsCell.value);
-	          var autoCompactionSettings = initValues.autoCompactionSettings;
-	          _.each(autoCompactionSettings, function (value, k) {
-	            if (value instanceof Object) {
-	              _.each(value, function (subVal, subK) {
-	                initValues[k+'['+subK+']'] = subVal;
-	              });
-	            } else {
-	              initValues[k] = value;
-	            }
-	          });
-
-	          modalSpinner.close();
-
-	          var dialog = new UserManagementDetailsDialog(initValues, false);
-
-	          BucketsSection.currentlyShownBucket = bucketDetails;
-	          dialog.startDialog();
-			  $("#container").css("position", "fixed");
-	        };
-	      });
+		  modalSpinner.close();
+          var dialog = new UserManagementDetailsDialog();
+          dialog.startDialog();
+		  $("#container").css("position", "fixed");
+	      
 	    });
 	},
 	toggleMode: function (mode)
@@ -585,7 +426,7 @@ var UsersController = {
 		var jsonStr = JSON.stringify(jsonObject);
 		// console.log("OUTGOING: "+jsonStr);
 		$.ajax({
-		    type: 'POST',
+		    type: 'PUT',
 		    url: CROSS_DOMAIN_HANDLER_URL,
 		    crossDomain: true,
 		    data: jsonStr,
