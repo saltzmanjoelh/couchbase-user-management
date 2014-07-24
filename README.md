@@ -6,9 +6,7 @@ I need to make a patch file. In the meantime, here is what to do to get started:
 after line 2927 ```<script src="js/app.js"></script>``` add
 ```<script src="extensions/com.joelsaltzman.user_settings/user_settings.js"></script>```
 
-Example: ```<script src="js/app.js"></script>
-<script src="extensions/com.joelsaltzman.user_settings/user_settings.js"></script>
-</body>```
+Example: ```<script src="js/app.js"></script>\n<script src="extensions/com.joelsaltzman.user_settings/user_settings.js"></script>\n</body>```
 
 
 
@@ -18,7 +16,4 @@ Example: ```<script src="js/app.js"></script>
 ```<a class="inner_btn" href="#userSettings={%= h(encodeURIComponent(uri)) %}">Users</a>```
 
 
-Example: ```<button class="inner_btn cancel_compact_btn {%= disableCancel ? 'dynamic_disabled' : ''%}" data-uri="{%= h(thisBucketCompactionTask.cancelURI) %}"><span>Cancel</span></button>
-                  {% } %}
-					<a class="inner_btn" href="#userSettings={%= h(encodeURIComponent(uri)) %}">Users</a>
-                </div>```
+Example: ```<button class="inner_btn cancel_compact_btn {%= disableCancel ? 'dynamic_disabled' : ''%}" data-uri="{%= h(thisBucketCompactionTask.cancelURI) %}"><span>Cancel</span></button>\n{% } %}\n<a class="inner_btn" href="#userSettings={%= h(encodeURIComponent(uri)) %}">Users</a>\n</div>```
